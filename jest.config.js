@@ -4,5 +4,5 @@ module.exports = {
   rootDir: 'src',
   testRegex: '\\.test\\.ts$',
   coverageDirectory: '../coverage',
-  collectCoverageFrom: [ '**/*.ts' ]
-};
+  collectCoverageFrom: ['**/*.ts']
+}
