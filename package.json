@@ -7,6 +7,8 @@
     "clean": "node scripts/pre-compile.js",
     "build": "npm run clean && tsc",
     "test": "jest --passWithNoTests",
+    "test:clear": "jest --clearCache",
+    "test:report": "jest --coverage",
     "lint": "npm run lint:src && npm run lint:scripts",
     "lint:fix": "npm run lint:fix:src && npm run lint:fix:scripts",
     "lint:src": "eslint --ext .ts,js src/",
