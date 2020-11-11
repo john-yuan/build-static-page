@@ -3,6 +3,7 @@ import { green, cyan } from 'chalk'
 import { Config, checkConfig } from '../config'
 import { getIpAddresses } from '../utils/getIpAddresses'
 import { htmlMiddleware } from '../middleware/htmlMiddleware'
+import { lessMiddleware } from '../middleware/lessMiddleware'
 
 export const serve = (config: Partial<Config>) => {
   return new Promise((resolve, reject) => {
@@ -13,6 +14,7 @@ export const serve = (config: Partial<Config>) => {
     const addresses = getIpAddresses().filter((addr) => addr !== '127.0.0.1')
 
     app.use(htmlMiddleware({ config: checkedConfig }))
+    app.use(lessMiddleware({ config: checkedConfig }))
     app.use(express.static(src))
 
     const log = (message: string) => console.log(message)
