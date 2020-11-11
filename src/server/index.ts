@@ -1,29 +1,44 @@
 import express from 'express'
 import { green, cyan } from 'chalk'
-import { getIpAddresses } from '../utils/getIpAddresses'
 import { Config, checkConfig } from '../config'
+import { getIpAddresses } from '../utils/getIpAddresses'
 
 export const serve = (config: Partial<Config>) => {
-  const app = express()
-  const checkedConfig = checkConfig(config)
-  const { src, host, port } = checkedConfig
-  const addresses = getIpAddresses().filter((addr) => addr !== '127.0.0.1')
-
-  app.use(express.static(src))
-
-  app.listen(port, host, 511, () => {
+  return new Promise((resolve, reject) => {
+    const app = express()
+    const checkedConfig = checkConfig(config)
+    const { src, host, tryNextPort } = checkedConfig
     const relativeSrc = src.replace(process.cwd(), '.').replace(/\\/g, '/')
-    console.log(green('Serving:'))
-    console.log(cyan(`  ${relativeSrc}`))
-    console.log(green('Server running at:'))
+    const addresses = getIpAddresses().filter((addr) => addr !== '127.0.0.1')
 
-    if (host === '0.0.0.0') {
-      console.log('  Local:   ' + cyan(`http://localhost:${port}/`))
-      addresses.forEach((ip) => {
-        console.log('  Network: ' + cyan(`http://${ip}:${port}/`))
+    app.use(express.static(src))
+
+    const log = (message: string) => console.log(message)
+    const listen = (port: number) => {
+      app.listen(port, host, 511, () => {
+        log(green('Serving:'))
+        log(cyan(`  ${relativeSrc}`))
+        log(green('Server running at:'))
+
+        if (host === '0.0.0.0') {
+          log('  Local:   ' + cyan(`http://localhost:${port}/`))
+          addresses.forEach((ip) => {
+            log('  Network: ' + cyan(`http://${ip}:${port}/`))
+          })
+        } else {
+          log(cyan(`  http://${host}:${port}/`))
+        }
+
+        resolve(port)
+      }).on('error', (err: { code: string }) => {
+        if (tryNextPort && err && err.code === 'EADDRINUSE') {
+          listen(port + 1)
+        } else {
+          reject(err)
+        }
       })
-    } else {
-      console.log(cyan(`  http://${host}:${port}/`))
     }
+
+    listen(checkedConfig.port)
   })
 }

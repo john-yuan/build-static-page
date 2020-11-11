@@ -5,8 +5,9 @@ import { readAsString } from '../utils/readAsString'
 export interface Config {
   src: string;
   dist: string;
-  port: number;
   host: string;
+  port: number;
+  tryNextPort: boolean;
   templateGlobals: { [name: string]: unknown }
 }
 
@@ -60,6 +61,7 @@ export const checkConfig = (config: Partial<Config>): Config => {
     dist: path.resolve(dist),
     host,
     port,
+    tryNextPort: !!config.tryNextPort,
     templateGlobals
   }
 }

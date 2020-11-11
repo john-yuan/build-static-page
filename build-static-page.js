@@ -5,6 +5,7 @@ module.exports = function (mode) {
     src: path.resolve(__dirname, 'example/www'),
     dist: path.resolve(__dirname, 'example/dist'),
     port: 4003,
+    tryNextPort: true,
     templateGlobals: {
       MODE: mode
     }

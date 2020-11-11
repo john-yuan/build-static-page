@@ -38,7 +38,11 @@ if (config) {
       }
     }
 
-    serve(config)
+    serve(config).catch((err) => {
+      console.error('Error: Failed to start server.')
+      console.error(err)
+      process.exit(1)
+    })
   } else {
     if (argv.actions.length === 0) {
       console.log('Usage:')
