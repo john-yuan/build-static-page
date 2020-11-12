@@ -4,7 +4,7 @@
   "description": "A build tool to help you develop static pages.",
   "main": "dist/index.js",
   "scripts": {
-    "start": "npm run build && ./dist/bin.js serve",
+    "start": "npm run build && cd example && ../dist/bin.js serve",
     "clean": "node scripts/pre-compile.js",
     "build": "npm run clean && tsc && node scripts/post-compile.js",
     "test": "jest --passWithNoTests",

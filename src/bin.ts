@@ -7,7 +7,8 @@ import { serve } from './server'
 
 const argv = parseArgv(process.argv.slice(2))
 const mode = readAsString(argv.option.mode) || 'development'
-const configOption = readAsString(argv.option.config) || 'build-static-page.js'
+const defaultConfig = 'build-static-page.config.js'
+const configOption = readAsString(argv.option.config) || defaultConfig
 const configPath = path.resolve(configOption)
 
 let config: Partial<Config>
